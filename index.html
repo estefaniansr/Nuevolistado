@@ -4,29 +4,52 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Listado</title>
-  <link rel="stylesheet" href="listado.css">
-</head>
-<body>
-  <h1>Bienvenid@ al listado</h1>
-  <p>Este es el inicio de mi página en GitHub Pages.</p>
-
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Menú Agrupado</title>
   <style>
     body {
       font-family: monospace;
       background-color: #f5f5f5;
+      display: flex;
+      justify-content: space-between;
+      padding: 20px;
     }
+
     .console {
       background-color: white;
       border: 1px solid #aaa;
-      width: 700px;
+      width: 45%;
       height: 600px;
       overflow: auto;
       padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
+
+    .item {
+      padding: 8px;
+      margin: 6px 0;
+      background-color: #f0f0f0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+      user-select: none;
+    }
+
+    .drop-zone {
+      background-color: #fafafa;
+      border: 2px dashed #ccc;
+      height: 300px;
+      width: 45%;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      overflow: auto;
+    }
+
+    .drop-zone.drag-over {
+      background-color: #e0f7fa;
+    }
+
     .header {
       display: flex;
       justify-content: flex-start;
@@ -34,248 +57,166 @@
       margin-bottom: 10px;
       font-size: 14px;
     }
-    .header span {
-      margin-right: 10px;
-    }
+
     select {
       padding: 2px 5px;
       font-family: monospace;
     }
 
-    details {
-      margin: 4px 0;
-      position: relative;
-      padding-left: 20px;
-    }
-    summary {
-      cursor: pointer;
+    .group-title {
       font-weight: bold;
-      position: relative;
+      margin-top: 10px;
     }
 
-    /* Rama vertical */
-    details::before {
-      content: "";
-      position: absolute;
-      left: 8px;
-      top: 0;
-      bottom: 0;
-      border-left: 1px solid #888;
+    .group {
+      margin-top: 10px;
+      display: none; /* Ocultar las agrupaciones por defecto */
     }
 
-    /* Rama horizontal */
-    summary::before {
-      content: "";
-      position: absolute;
-      left: -12px;
-      top: 0.9em;
-      width: 12px;
-      border-top: 1px solid #888;
+    /* Estilo para el menú desplegable */
+    details {
+      margin-top: 10px;
     }
 
-    /* Subniveles */
-    details details summary {
-      font-weight: normal;
+    summary {
+      font-weight: bold;
+      cursor: pointer;
     }
-    details details {
+
+    .subitem {
       margin-left: 20px;
+      cursor: pointer;
+      padding: 5px;
+      background-color: #e7e7e7;
+      border-radius: 4px;
     }
 
-    /* Último nodo */
-    details:last-child::before {
-      bottom: auto;
-      height: 0.9em;
+    .subitem:hover {
+      background-color: #c8c8c8;
     }
+
   </style>
 </head>
 <body>
+
+  <!-- Zona izquierda (Lista de ítems seleccionables) -->
   <div class="console">
-    <!-- Encabezado -->
     <div class="header">
-      <span>Agrupados</span>
-      <select>
-        <option>Listados por modulos</option>
-        <option>Semanal</option>
-        <option>Mensual</option>
-        <option>Anual</option>
+      <select id="group-select" onchange="filterGroups()">
+        <option value="">Seleccionar agrupación</option>
+        <option value="group-1">Semanal</option>
+        <option value="group-2">Mensual</option>
+        <option value="group-3">Favoritos</option>
       </select>
-      
     </div>
- 
-    
 
-    <!-- Ventas -->
-    <details>
-      <summary>Ventas 🪪</summary>
-
+    <div id="list-left">
+      <!-- Menú desplegable de ítems -->
       <details>
-        <summary>+Comprobantes 🪪</summary>
-        <details><summary>+Comprobantes 🪪</summary></details>
-        <details><summary>+Consolidado por Camión 🪪</summary></details>
-        <details><summary>+Comrpobantes por Vendedor 🪪</summary></details>
-        <details><summary>+Comprobantes Pendientes a Descargar 🪪</summary></details>
-        <details><summary>+Comprobantes por Camión 🪪</summary></details>
+        <summary>Ventas 🪪</summary>
+        <div class="subitem" id="item-1" draggable="true" data-item="Ventas 🪪">Ventas 🪪</div>
+        <div class="subitem" id="item-2" draggable="true" data-item="Comprobantes">Comprobantes</div>
+        <div class="subitem" id="item-3" draggable="true" data-item="Consolidado por Camión">Consolidado por Camión</div>
+        <div class="subitem" id="item-4" draggable="true" data-item="Descargas">Descargas</div>
+        <div class="subitem" id="item-5" draggable="true" data-item="Cobranzas">Cobranzas</div>
+        <div class="subitem" id="item-6" draggable="true" data-item="IvaVentas">Iva Ventas</div>
+        <div class="subitem" id="item-7" draggable="true" data-item="UtilComp">Utilidad por Comprobantes</div>
       </details>
 
       <details>
-        <summary>+Descargas 🪪</summary>
-        <details><summary>+Desglose de Articulos Pendientes a Descargar 🪪</summary></details>
-        <details><summary>+Seguimientos de Artiuclos a Descargar 🪪</summary></details>
+        <summary>Compras 🪪</summary>
+        <div class="subitem" id="item-8" draggable="true" data-item="Compras 🪪">Compras 🪪</div>
+        <div class="subitem" id="item-9" draggable="true" data-item="Consolidado por Proveedor">Consolidado por Proveedor</div>
       </details>
 
       <details>
-        <summary>+Talle/Color 🪪</summary>
-        <details><summary>+Comprobantes Detallado por talle y Color 🪪</summary></details>
-        <details><summary>+Comrpobantes pendientes a Descargar por Talle y Color 🪪</summary></details>
-        <details><summary>+Comrpobantes pendientes a Descargar/Stock por Talle y Color 🪪</summary></details>
-        <details><summary>+Desglose de Artiuclos Pendientes a Descargar por Talle y COlor 🪪</summary></details>
-        <details><summary>+Seguimientos de Articulos a descargar por Talle y Color 🪪</summary></details>
+        <summary>Stock 🪪</summary>
+        <div class="subitem" id="item-10" draggable="true" data-item="Stock 🪪">Stock 🪪</div>
+        <div class="subitem" id="item-11" draggable="true" data-item="Stock Valorizado">Stock Valorizado</div>
       </details>
-
-      <details>
-        <summary>+Cobranzas 🪪</summary>
-        <details><summary>+Cobranzas 🪪</summary></details>
-        <details><summary>+Cobranzas detalladas 🪪</summary></details>
-        <details><summary>+Cobranzas con Promedio de Díias 🪪</summary></details>
-        <details><summary>+Cobranzas por Cobrador 🪪</summary></details>
-        <details><summary>+Cobranzas por Provincias 🪪</summary></details>
-      </details>
-
-      <details>
-        <summary>+Iva Ventas 🪪</summary>
-        <details><summary>+Libro Iva Ventas 🪪</summary></details>
-        <details><summary>+Libro Iva Ventas por Fecha y Sucursal 🪪</summary></details>
-      </details>
-
-      <details>
-        <summary>+Utilidad por Comprobantes 🪪</summary>
-        <details><summary>+Formato detallado por Cliente 🪪</summary></details>
-        <details><summary>+Formato Detallado por Fecha 🪪</summary></details>
-        <details><summary>+Formato Resumido 🪪</summary></details>
-      </details>
-
-      <details>
-        <summary>+Vencimientos a Cobrar 🪪</summary>
-        <details><summary>+Ordenado por Cliente 🪪</summary></details>
-        <details><summary>+Ordenado por Cliente Alfabeticamente/Razon Social 🪪</summary></details>
-        <details><summary>+Ordenado por fecha de vencimiento 🪪</summary></details>
-        <details><summary>+Ordenado por Prioridad 🪪</summary></details>
-        <details><summary>+Resumido por Cliente 🪪</summary></details>
-      </details>
-
-      <details>
-        <summary>+Clientes 🪪</summary>
-        <details><summary>+CLientes que no compran desde una fecha 🪪</summary></details>
-        <details><summary>+Clientes Bloqueados 🪪</summary></details>
-      </details>
-    </details>
-
-    <!-- Compras -->
-    <details>
-      <summary>Compras 🪪</summary>
-
-      <details>
-        <summary>+Comprobantes 🪪</summary>
-        <details><summary>+Comprobantes 🪪 👥 </summary></details>
-        <details><summary>+Consolidado por Proveedor 🪪 👥 </summary></details>
-        <details><summary>+Comprobantes por Responsable 🪪 👥 </summary></details>
-        <details><summary>+Comprobantes Pendientes a Aprobar 🪪 👥 </summary></details>
-        <details><summary>+Comprobantes por Orden de Compra 🪪 👥 </summary></details>
-      </details>
-
-      <details>
-        <summary>+Descargas 🪪</summary>
-        <details><summary>+Artículos Pendientes de Ingreso 🪪 👥 </s ummary></details>
-        <details><summary>+Seguimiento de Artículos Comprados 🪪 👥 </summary></details>
-      </details>
-
-      <details>
-        <summary>+Talle/Color</summary>
-        <details><summary>+Comprobantes Detallado por talle y Color 🪪 👥 </summary></details>
-        <details><summary>+Pendientes a Ingresar por Talle y Color 🪪 👥 </summary></details>
-        <details><summary>+Stock Proyectado por Talle y Color 🪪 👥 </summary></details>
-        <details><summary>+Desglose de Pendientes por Talle y Color 🪪 👥 </summary></details>
-        <details><summary>+Seguimiento de Ingresos por Talle y Color 🪪 👥 </summary></details>
-      </details>
-
-      <details>
-        <summary>+Pagos</summary>
-        <details><summary>+Pagos Realizados 🪪 👥 </summary></details>
-        <details><summary>+Pagos Detallados 🪪 👥 </summary></details>
-        <details><summary>+Promedio de Días de Pago 🪪 👥 </summary></details>
-        <details><summary>+Pagos por Proveedor 🪪 👥 </summary></details>
-        <details><summary>+Pagos por Provincia 🪪 👥 </summary></details>
-      </details>
-
-      <details>
-        <summary>+Iva Compras</summary>
-        <details><summary>+Libro Iva Compras</summary></details>
-        <details><summary>+Libro Iva Compras por Fecha y Sucursal</summary></details>
-      </details>
-
-      <details>
-        <summary>+Utilidad por Compras</summary>
-        <details><summary>+Formato detallado por Proveedor</summary></details>
-        <details><summary>+Formato Detallado por Fecha</summary></details>
-        <details><summary>+Formato Resumido</summary></details>
-      </details>
-
-      <details>
-        <summary>+Vencimientos a Pagar</summary>
-        <details><summary>+Ordenado por Proveedor</summary></details>
-        <details><summary>+Ordenado por Proveedor Alfabeticamente/Razon Social</summary></details>
-        <details><summary>+Ordenado por fecha de vencimiento</summary></details>
-        <details><summary>+Ordenado por Prioridad</summary></details>
-        <details><summary>+Resumido por Proveedor</summary></details>
-      </details>
-
-      <details>
-        <summary>+Proveedores</summary>
-        <details><summary>+Proveedores Inactivos</summary></details>
-        <details><summary>+Proveedores Bloqueados</summary></details>
-      </details>
-    </details>
-
-    <!-- Stock -->
-    <details>
-      <summary>Stock</summary>
-
-      <details>
-        <summary>+Comprobantes</summary>
-      </details>
-
-      <details>
-        <summary>+Stock Valorizado</summary>
-        <details><summary>+Stock Valorizado</summary></details>
-        <details><summary>+Stock valorizado a una fecha</summary></details>
-      </details>
-
-      <details>
-        <summary>+Comprobantes Detallados</summary>
-      </details>
-
-      <details>
-        <summary>+Depositos</summary>
-        <details><summary>+Stock por deposito</summary></details>
-        <details><summary>+Stock comparativo por deposito</summary></details>
-        <details><summary>+Movimientos de artiuclos por depositos</summary></details>
-      </details>
-
-      <details>
-        <summary>+Produccion</summary>
-        <details><summary>+Produccion</summary></details>
-        <details><summary>+Formulas de produccion</summary></details>
-      </details>
-
-      <details>
-        <summary>+Lote</summary>
-        <details><summary>+Stock por depósito por lote</summary></details>
-        <details><summary>+Movimiento de artiuclos por lote</summary></details>
-        <details><summary>+Stock abierto por lote</summary></details>
-      </details>
-    </details>
+    </div>
   </div>
-</body>
-</html>  
+
+  <!-- Zona derecha (Agrupaciones fijas donde se agregan los elementos seleccionados) -->
+  <div class="drop-zone" id="drop-right">
+    <div id="group-1" class="group" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <h3 class="group-title">Semanal</h3>
+      <div id="group-1-items"></div>
+    </div>
+    <div id="group-2" class="group" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <h3 class="group-title">Mensual</h3>
+      <div id="group-2-items"></div>
+    </div>
+    <div id="group-3" class="group" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <h3 class="group-title">Anual</h3>
+      <div id="group-3-items"></div>
+    </div>
+  </div>
+
+  <script>
+    // Función para permitir el "dragover" y habilitar el drop
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
+
+    // Función para manejar el "drop"
+    function drop(ev) {
+      ev.preventDefault();
+
+      // Obtener el id del grupo de destino donde se soltó
+      const groupId = ev.target.closest('.group').id;
+
+      // Obtener el id del ítem que se está arrastrando
+      const itemId = ev.dataTransfer.getData("text");
+
+      // Obtener el ítem correspondiente
+      const item = document.getElementById(itemId);
+      if (item) {
+        // Crear una nueva "copia" del ítem y agregarlo al grupo de destino
+        const newItem = item.cloneNode(true); // Clonamos el elemento para no eliminar el original
+        const groupItemsContainer = document.getElementById(`${groupId}-items`);
+        groupItemsContainer.appendChild(newItem);
+      }
+    }
+
+    // Añadir eventos de "dragstart" a los ítems
+    const items = document.querySelectorAll('.subitem');
+    items.forEach(item => {
+      item.addEventListener("dragstart", (ev) => {
+        // Guardar el id del elemento arrastrado en el objeto de transferencia de datos
+        ev.dataTransfer.setData("text", ev.target.id);
+      });
+    });
+
+    // Función para permitir el arrastre a los grupos
+    const groups = document.querySelectorAll('.group');
+    groups.forEach(group => {
+      group.addEventListener('dragover', (ev) => {
+        ev.preventDefault();  // Permite el "drop"
+        group.classList.add('drag-over');
+      });
+
+      group.addEventListener('dragleave', () => {
+        group.classList.remove('drag-over');
+      });
+    });
+
+    // Filtrar los grupos según la selección en el select
+    function filterGroups() {
+      const selectedGroup = document.getElementById("group-select").value;
+      
+      // Ocultar todas las agrupaciones
+      const allGroups = document.querySelectorAll('.group');
+      allGroups.forEach(group => {
+        group.style.display = "none";
+      });
+
+      // Mostrar solo el grupo seleccionado
+      if (selectedGroup) {
+        document.getElementById(selectedGroup).style.display = "block";
+      }
+    }
+  </script>
+
 </body>
 </html>
